@@ -3,21 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semester GPA Calculator</title>
+<title>Agri GPA System</title>
 
 <style>
 body {
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Inter', sans-serif;
   margin: 0;
-  background: linear-gradient(-45deg, #e8f5e9, #f1f8e9, #e3f2fd, #f9fbe7);
+  background: linear-gradient(-45deg, #f5f7f6, #eef6f1, #f0f9f4);
   background-size: 300% 300%;
-  animation: gradientBG 20s ease infinite;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  animation: bgShift 45s ease infinite;
 }
 
-@keyframes gradientBG {
+@keyframes bgShift {
   0% {background-position: 0% 50%;}
   50% {background-position: 100% 50%;}
   100% {background-position: 0% 50%;}
@@ -26,79 +23,62 @@ body {
 header {
   text-align: center;
   padding: 20px;
-  color: #2e7d32;
+  background: white;
+  border-bottom: 1px solid #ddd;
 }
 
-.intro {
-  text-align: center;
-  color: #555;
-  margin-bottom: 20px;
+.main {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 20px;
+  padding: 20px;
 }
 
-.container {
-  max-width: 600px;
-  margin: auto;
-  padding: 30px;
-  background: rgba(255,255,255,0.9);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
 }
 
-.form-group {
-  margin-bottom: 20px;
-}
-
-label {
-  font-weight: 600;
-  display: block;
-  margin-bottom: 6px;
+.course-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
 input {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
 button {
-  padding: 10px 14px;
+  padding: 8px;
+  border-radius: 6px;
   border: none;
-  border-radius: 8px;
   cursor: pointer;
-  font-weight: 600;
+}
+
+.primary { background: #16a34a; color: white; }
+.secondary { background: #ddd; }
+.danger { background: #dc2626; color: white; }
+
+.result {
+  font-size: 1.4rem;
   margin-top: 10px;
 }
 
-.primary-btn {
-  background: #2e7d32;
-  color: white;
+.insight {
+  background: #ecfdf5;
+  padding: 8px;
+  margin-top: 8px;
+  border-left: 4px solid #16a34a;
 }
 
-.secondary-btn {
-  background: #e0e0e0;
-}
-
-.remove-button {
-  background: #dc3545;
-  color: white;
-}
-
-.result {
-  margin-top: 20px;
-  font-size: 1.3rem;
-  font-weight: bold;
-  text-align: center;
-  color: #2e7d32;
-}
-
-footer {
-  text-align: center;
-  padding: 15px;
-  font-size: 0.85rem;
-  color: #777;
-  margin-top: auto;
+@media(max-width:900px){
+  .main { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -106,118 +86,175 @@ footer {
 <body>
 
 <header>
-  <h1>Semester GPA Calculator</h1>
+<h1>Agriculture GPA Intelligence System</h1>
 </header>
 
-<div class="intro">
-  Enter marks and credits to calculate your GPA
-</div>
+<div class="main">
 
-<div class="container">
+<!-- LEFT -->
+<div class="card">
+<h3>Courses</h3>
 
-<form id="gpa-form">
-  <div id="courses">
-    <div class="form-group" id="course1">
-      <label>Course 1 Marks (%)</label>
-      <input type="number" id="marks1" required>
+<div id="courses"></div>
 
-      <label>Course 1 Credit Hours</label>
-      <input type="number" id="credit1" required>
-    </div>
-  </div>
+<button class="secondary" onclick="addCourse()">+ Add Course</button>
+<button class="primary" onclick="calculate()">Calculate GPA</button>
 
-  <button type="button" class="secondary-btn" onclick="addCourse()">+ Add Course</button>
-  <button type="submit" class="primary-btn">Calculate GPA</button>
-</form>
-
-<div class="result" id="result"></div>
-
-<canvas id="gpaChart" style="margin-top:20px;"></canvas>
+<div id="result" class="result"></div>
+<canvas id="chart"></canvas>
 
 </div>
 
-<footer>
-  Developed by Sabari
-</footer>
+<!-- RIGHT -->
+<div class="card">
+
+<h3>Target GPA</h3>
+<input type="number" id="target" placeholder="Enter target GPA">
+<button class="primary" onclick="predict()">Predict Required GPA</button>
+
+<div id="prediction" class="insight"></div>
+
+<h3>Insights</h3>
+<div id="insights"></div>
+
+</div>
+
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-let courseCount = 1;
+
+let count = 0;
 let chart;
+let lastData = null;
 
-function addCourse() {
-  courseCount++;
-  const div = document.getElementById("courses");
+/* ADD COURSE */
+function addCourse(){
+  count++;
 
-  div.insertAdjacentHTML("beforeend", `
-    <div class="form-group" id="course${courseCount}">
-      <label>Course ${courseCount} Marks (%)</label>
-      <input type="number" id="marks${courseCount}" required>
+  const row = document.createElement("div");
+  row.className = "course-row";
+  row.id = "course"+count;
 
-      <label>Course ${courseCount} Credit Hours</label>
-      <input type="number" id="credit${courseCount}" required>
+  row.innerHTML = `
+    <input type="number" id="marks${count}" placeholder="Marks (%)">
+    <input type="number" id="credit${count}" placeholder="Credits">
+    <button class="danger" onclick="removeCourse(${count})">X</button>
+  `;
 
-      <button type="button" class="remove-button" onclick="removeCourse(${courseCount})">Remove</button>
-    </div>
-  `);
+  document.getElementById("courses").appendChild(row);
 }
 
-function removeCourse(id) {
-  document.getElementById("course" + id)?.remove();
+/* REMOVE COURSE */
+function removeCourse(id){
+  document.getElementById("course"+id)?.remove();
 }
 
-document.getElementById("gpa-form").addEventListener("submit", function(e) {
-  e.preventDefault();
+/* INIT */
+addCourse();
 
-  let totalCredits = 0;
-  let totalPoints = 0;
-  let labels = [];
-  let values = [];
+/* CALCULATE */
+function calculate(){
 
-  for (let i = 1; i <= courseCount; i++) {
-    const c = document.getElementById("course" + i);
-    if (c) {
-      const marks = parseFloat(document.getElementById("marks" + i).value);
-      const credit = parseFloat(document.getElementById("credit" + i).value);
+  let totalC=0,totalP=0;
+  let labels=[],values=[],impacts=[];
+  let courses=0;
 
-      let gp = marks / 10;
+  for(let i=1;i<=count;i++){
+    let row=document.getElementById("course"+i);
+    if(row){
+      let m=parseFloat(document.getElementById("marks"+i).value);
+      let c=parseFloat(document.getElementById("credit"+i).value);
 
-      totalCredits += credit;
-      totalPoints += gp * credit;
+      if(!isNaN(m) && !isNaN(c)){
+        let gp=m/10;
+        totalC+=c;
+        totalP+=gp*c;
 
-      labels.push("Course " + i);
-      values.push(gp);
+        labels.push("C"+i);
+        values.push(gp);
+        impacts.push(gp*c);
+        courses++;
+      }
     }
   }
 
-  const gpa = totalPoints / totalCredits;
-  document.getElementById("result").innerText = "GPA: " + gpa.toFixed(2);
+  if(totalC===0){
+    alert("Enter valid data");
+    return;
+  }
 
-  const ctx = document.getElementById("gpaChart").getContext("2d");
+  let gpa = totalP/totalC;
 
-  if (chart) chart.destroy();
+  lastData = {totalC,totalP,courses};
 
-  chart = new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: labels,
-      datasets: [{
-        label: "Grade Points",
-        data: values
+  document.getElementById("result").innerText="GPA: "+gpa.toFixed(2);
+  document.getElementById("prediction").innerText="";
+
+  /* CHART */
+  if(chart) chart.destroy();
+
+  chart=new Chart(document.getElementById("chart"),{
+    type:"bar",
+    data:{
+      labels:labels,
+      datasets:[{
+        label:"Grade Points",
+        data:values
       }]
     },
-    options: {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true,
-          max: 10
-        }
-      }
+    options:{
+      scales:{ y:{ beginAtZero:true, max:10 }}
     }
   });
-});
+
+  /* INSIGHTS */
+  let maxIndex = impacts.indexOf(Math.max(...impacts))+1;
+  let minIndex = impacts.indexOf(Math.min(...impacts))+1;
+
+  document.getElementById("insights").innerHTML=`
+    <div class="insight">Highest contributor: Course ${maxIndex}</div>
+    <div class="insight">Weakest course: Course ${minIndex}</div>
+  `;
+}
+
+/* PREDICT (MATHEMATICAL) */
+function predict(){
+
+  if(!lastData){
+    alert("Calculate GPA first");
+    return;
+  }
+
+  let target=parseFloat(document.getElementById("target").value);
+
+  if(isNaN(target)){
+    alert("Enter target GPA");
+    return;
+  }
+
+  let {totalC,totalP,courses} = lastData;
+
+  let futureCourses = 1; // assume next course
+  let futureCredits = totalC / courses;
+
+  let requiredGP =
+    (target*(totalC+futureCredits) - totalP) / futureCredits;
+
+  if(requiredGP > 10){
+    document.getElementById("prediction").innerText =
+      "Target too high. Not realistically achievable.";
+  } else if(requiredGP < 0){
+    document.getElementById("prediction").innerText =
+      "Target already achieved.";
+  } else {
+    document.getElementById("prediction").innerText =
+      "You need average GPA of " + requiredGP.toFixed(2) +
+      " in upcoming course.";
+  }
+}
+
 </script>
 
 </body>
