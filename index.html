@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agriculture GPA Calculator</title>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #eef2f3;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      color: #28a745;
+      margin: 0 10px;
+    }
+
+    .intro {
+      font-size: 1.2rem;
+      color: #555;
+      margin: 20px;
+      padding: 0 20px;
+      font-style: italic;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      padding: 0 10px;
+    }
+
+    .button {
+      padding: 15px 30px;
+      border: none;
+      border-radius: 30px;
+      background-color: #28a745;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: #218838;
+    }
+
+    /* Bottom right buttons */
+    .bottom-right-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #007bff;
+      padding: 10px 20px;
+      border-radius: 25px;
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      text-decoration: none;
+      text-align: center;
+      transition: background-color 0.3s ease;
+    }
+
+    .bottom-right-button:hover {
+      background-color: #0056b3;
+    }
+
+    .agri-chat-button {
+      bottom: 70px; /* Place it above the feedback button */
+      right: 20px;
+      background-color: #28a745;
+    }
+
+    .agri-chat-button:hover {
+      background-color: #218838;
+    }
+
+    /* Chat Popup */
+    #chatPopup {
+      display: none;
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      width: 300px;
+      height: 400px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      z-index: 1000;
+    }
+
+    #chatPopupHeader {
+      background-color: #28a745;
+      color: white;
+      padding: 10px;
+      font-size: 1rem;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    #chatBody {
+      padding: 10px;
+      height: 280px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    #chatBody div {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .user-message, .ai-message {
+      padding: 8px;
+      border-radius: 10px;
+      max-width: 80%;
+    }
+
+    .user-message {
+      background-color: #f1f1f1;
+      align-self: flex-end;
+    }
+
+    .ai-message {
+      background-color: #28a745;
+      color: white;
+      align-self: flex-start;
+    }
+
+    #closePopup {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: transparent;
+      border: none;
+      font-size: 1.2rem;
+      color: white;
+      cursor: pointer;
+    }
+
+    /* Input area */
+    #chatInput {
+      padding: 10px;
+      width: 100%;
+      border: 1px solid #ddd;
+      border-top: none;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    #chatInput input {
+      width: 70%;
+      padding: 8px;
+      font-size: 0.9rem;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+
+    #chatInput button {
+      width: 25%;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    #chatInput button:hover {
+      background-color: #218838;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2rem;
+      }
+
+      .intro {
+        font-size: 1rem;
+      }
+
+      .button {
+        font-size: 0.9rem;
+        padding: 12px 20px;
+      }
+
+      .bottom-right-button, .agri-chat-button {
+        font-size: 0.9rem;
+        padding: 8px 18px;
+      }
+
+      #chatPopup {
+        width: 80%;
+        bottom: 80px;
+        right: 10%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header h1 {
+        font-size: 1.8rem;
+      }
+
+      .intro {
+        font-size: 0.9rem;
+      }
+
+      .button {
+        font-size: 0.8rem;
+        padding: 10px 15px;
+      }
+
+      .bottom-right-button, .agri-chat-button {
+        font-size: 0.8rem;
+        padding: 6px 15px;
+      }
+
+      #chatPopup {
+        width: 90%;
+        bottom: 80px;
+        right: 5%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Agriculture GPA Calculator</h1>
+  </header>
+  <div class="intro">
+    A smarter way to calculate your GPA for agricultural studies! Simplify your workload and focus on achieving academic success.
+  </div>
+  <div class="buttons">
+    <a href="semester_gpa.html" class="button">Sem-wise GPA</a>
+    <a href="cumulative_gpa.html" class="button">OGPA Calculation</a>
+  </div>
+
+  <!-- Feedback button -->
+  <a href="https://forms.gle/aZ2V2XqT93gaFpVq6" class="bottom-right-button">Feedback</a>
+
+  <!-- AgriChatGPT button -->
+  <button class="bottom-right-button agri-chat-button" onclick="toggleChatPopup()">AgriChatGPT</button>
+
+  <!-- Chat Popup -->
+  <div id="chatPopup">
+    <div id="chatPopupHeader">
+      AgriChatGPT
+      <button id="closePopup" onclick="toggleChatPopup()">&times;</button>
+    </div>
+    <div id="chatBody">
+      <div class="ai-message">Hello! How can I help you with your agricultural studies today?</div>
+    </div>
+    <div id="chatInput">
+      <input type="text" id="userInput" placeholder="Type your message...">
+      <button id="sendButton">Send</button>
+    </div>
+  </div>
+
+  <script>
+    function toggleChatPopup() {
+      const chatPopup = document.getElementById("chatPopup");
+      chatPopup.style.display = chatPopup.style.display === "block" ? "none" : "block";
+    }
+
+    // Attach event listener to the send button
+    document.getElementById("sendButton").addEventListener("click", function() {
+      sendMessage();
+    });
+
+    function sendMessage() {
+      const userInput = document.getElementById("userInput").value;
+      if (userInput.trim() !== "") {
+        // Display the user's message
+        const userMessage = document.createElement("div");
+        userMessage.className = "user-message";
+        userMessage.innerText = userInput;
+        document.getElementById("chatBody").appendChild(userMessage);
+
+        // Clear the input field
+        document.getElementById("userInput").value = "";
+
+        // Scroll to the bottom of the chat
+        document.getElementById("chatBody").scrollTop = document.getElementById("chatBody").scrollHeight;
+
+        // Simulate an AI response (this should be replaced with real AI interaction)
+        setTimeout(function() {
+          const aiMessage = document.createElement("div");
+          aiMessage.className = "ai-message";
+          aiMessage.innerText = "We are working on it. Kindly wait. Thank you for your patience!";
+          document.getElementById("chatBody").appendChild(aiMessage);
+
+          // Scroll to the bottom of the chat again after AI response
+          document.getElementById("chatBody").scrollTop = document.getElementById("chatBody").scrollHeight;
+        }, 1000);
+      }
+    }
+  </script>
+</body>
+</html>

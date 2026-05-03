@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OGPA Calculator</title>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #eef2f3;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background-color: #28a745;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+    .intro {
+      text-align: center;
+      margin: 20px;
+      font-size: 1.1rem;
+      color: #555;
+      font-style: italic;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: 10px;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .remove-button {
+      background-color: #dc3545;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .remove-button:hover {
+      background-color: #c82333;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      text-align: center;
+      color: #28a745;
+    }
+    footer {
+      background-color: #f1f1f1;
+      padding: 15px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #777;
+      margin-top: auto;
+      border-top: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>OGPA Calculator</h1>
+  </header>
+  <div class="intro">
+    Calculate your cumulative GPA by entering GPAs and credit hours for all semesters.
+  </div>
+  <div class="container">
+    <form id="cumulative-gpa-form">
+      <div id="semesters">
+        <div class="form-group" id="semester1">
+          <label for="gpa1">Semester 1 GPA</label>
+          <input type="number" id="gpa1" name="gpa1" placeholder="Enter GPA (0.00-10.00)" required min="0" max="10" step="0.01">
+          <label for="credit1">Semester 1 Credit Hours</label>
+          <input type="number" id="credit1" name="credit1" placeholder="Enter credit hours" required min="1" step="1">
+        </div>
+      </div>
+      <button type="button" onclick="addSemester()">Add Another Semester</button>
+      <button type="submit">Calculate Cumulative GPA</button>
+    </form>
+    <div class="result" id="result"></div>
+  </div>
+  <footer>
+    Created by Mr. R. Sabarivasan (M.Sc. Agronomy) and Mr. B.S. Anand Babu (M.Sc. Entomology)
+  </footer>
+
+  <script>
+    let semesterCount = 1;
+
+    // Function to add another semester input
+    function addSemester() {
+      semesterCount++;
+      const semestersDiv = document.getElementById("semesters");
+      const semesterHTML = `
+        <div class="form-group" id="semester${semesterCount}">
+          <label for="gpa${semesterCount}">Semester ${semesterCount} GPA</label>
+          <input type="number" id="gpa${semesterCount}" name="gpa${semesterCount}" placeholder="Enter GPA (0.00-10.00)" required min="0" max="10" step="0.01">
+          <label for="credit${semesterCount}">Semester ${semesterCount} Credit Hours</label>
+          <input type="number" id="credit${semesterCount}" name="credit${semesterCount}" placeholder="Enter credit hours" required min="1" step="1">
+          <button type="button" class="remove-button" onclick="removeSemester(${semesterCount})">Remove Semester</button>
+        </div>
+      `;
+      semestersDiv.insertAdjacentHTML("beforeend", semesterHTML);
+    }
+
+    // Function to remove a semester input
+    function removeSemester(semesterId) {
+      const semesterDiv = document.getElementById(`semester${semesterId}`);
+      if (semesterDiv) {
+        semesterDiv.remove();
+      }
+    }
+
+    // Cumulative GPA Calculation logic
+    document.getElementById("cumulative-gpa-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      let totalCreditPoints = 0;
+      let totalCredits = 0;
+
+      for (let i = 1; i <= semesterCount; i++) {
+        const semesterDiv = document.getElementById(`semester${i}`);
+        if (semesterDiv) {
+          const gpa = parseFloat(document.getElementById(`gpa${i}`).value);
+          const credit = parseFloat(document.getElementById(`credit${i}`).value);
+
+          if (isNaN(gpa) || isNaN(credit)) {
+            alert(`Please fill out both GPA and credit hours for Semester ${i}.`);
+            return;
+          }
+
+          totalCreditPoints += gpa * credit;
+          totalCredits += credit;
+        }
+      }
+
+      if (totalCredits === 0) {
+        alert("Total credits cannot be zero. Please enter valid credit hours.");
+        return;
+      }
+
+      const cumulativeGPA = totalCreditPoints / totalCredits;
+      document.getElementById("result").textContent = `Your Cumulative GPA is: ${cumulativeGPA.toFixed(2)}`;
+    });
+  </script>
+</body>
+</html>
