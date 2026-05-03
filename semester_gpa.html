@@ -6,8 +6,6 @@
 <title>Semester GPA Calculator</title>
 
 <style>
-
-/* ===== BACKGROUND ===== */
 body {
   font-family: 'Segoe UI', sans-serif;
   margin: 0;
@@ -25,25 +23,18 @@ body {
   100% {background-position: 0% 50%;}
 }
 
-/* ===== HEADER ===== */
 header {
   text-align: center;
   padding: 20px;
   color: #2e7d32;
 }
 
-header h1 {
-  margin: 0;
-}
-
-/* ===== INTRO ===== */
 .intro {
   text-align: center;
   color: #555;
   margin-bottom: 20px;
 }
 
-/* ===== CARD ===== */
 .container {
   max-width: 600px;
   margin: auto;
@@ -52,15 +43,8 @@ header h1 {
   backdrop-filter: blur(10px);
   border-radius: 20px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  animation: fadeIn 0.8s ease;
 }
 
-@keyframes fadeIn {
-  from {opacity:0; transform: translateY(20px);}
-  to {opacity:1; transform: translateY(0);}
-}
-
-/* ===== FORM ===== */
 .form-group {
   margin-bottom: 20px;
 }
@@ -76,16 +60,8 @@ input {
   padding: 12px;
   border-radius: 8px;
   border: 1px solid #ddd;
-  transition: 0.3s;
 }
 
-input:focus {
-  border-color: #2e7d32;
-  outline: none;
-  box-shadow: 0 0 5px rgba(46,125,50,0.2);
-}
-
-/* ===== BUTTONS ===== */
 button {
   padding: 10px 14px;
   border: none;
@@ -100,10 +76,6 @@ button {
   color: white;
 }
 
-.primary-btn:hover {
-  background: #1b5e20;
-}
-
 .secondary-btn {
   background: #e0e0e0;
 }
@@ -111,14 +83,8 @@ button {
 .remove-button {
   background: #dc3545;
   color: white;
-  margin-top: 10px;
 }
 
-.remove-button:hover {
-  background: #c82333;
-}
-
-/* ===== RESULT ===== */
 .result {
   margin-top: 20px;
   font-size: 1.3rem;
@@ -127,26 +93,6 @@ button {
   color: #2e7d32;
 }
 
-/* ===== TABLE ===== */
-table {
-  width: 100%;
-  margin-top: 20px;
-  border-collapse: collapse;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-th {
-  background: #2e7d32;
-  color: white;
-}
-
-th, td {
-  padding: 10px;
-  text-align: center;
-}
-
-/* ===== FOOTER ===== */
 footer {
   text-align: center;
   padding: 15px;
@@ -154,7 +100,6 @@ footer {
   color: #777;
   margin-top: auto;
 }
-
 </style>
 </head>
 
@@ -187,35 +132,7 @@ footer {
 
 <div class="result" id="result"></div>
 
-<div id="credit-requirements" style="display:none;">
-  <h3>Minimum Credit Requirements</h3>
-  <table>
-    <tr>
-      <th>Requirement</th>
-      <th>UG</th>
-      <th>PG</th>
-      <th>Ph.D</th>
-      <th>Diploma</th>
-      <th>ODL</th>
-    </tr>
-    <tr>
-      <td>Pass</td>
-      <td>6.00</td>
-      <td>7.00</td>
-      <td>7.00</td>
-      <td>6.00</td>
-      <td>5.00</td>
-    </tr>
-    <tr>
-      <td>Completion</td>
-      <td>6.50</td>
-      <td>7.00</td>
-      <td>7.50</td>
-      <td>6.50</td>
-      <td>5.00</td>
-    </tr>
-  </table>
-</div>
+<canvas id="gpaChart" style="margin-top:20px;"></canvas>
 
 </div>
 
@@ -223,9 +140,11 @@ footer {
   Developed by Sabari
 </footer>
 
-<script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<script>
 let courseCount = 1;
+let chart;
 
 function addCourse() {
   courseCount++;
@@ -253,6 +172,8 @@ document.getElementById("gpa-form").addEventListener("submit", function(e) {
 
   let totalCredits = 0;
   let totalPoints = 0;
+  let labels = [];
+  let values = [];
 
   for (let i = 1; i <= courseCount; i++) {
     const c = document.getElementById("course" + i);
@@ -260,16 +181,43 @@ document.getElementById("gpa-form").addEventListener("submit", function(e) {
       const marks = parseFloat(document.getElementById("marks" + i).value);
       const credit = parseFloat(document.getElementById("credit" + i).value);
 
+      let gp = marks / 10;
+
       totalCredits += credit;
-      totalPoints += (marks/10) * credit;
+      totalPoints += gp * credit;
+
+      labels.push("Course " + i);
+      values.push(gp);
     }
   }
 
   const gpa = totalPoints / totalCredits;
   document.getElementById("result").innerText = "GPA: " + gpa.toFixed(2);
-  document.getElementById("credit-requirements").style.display = "block";
-});
 
+  const ctx = document.getElementById("gpaChart").getContext("2d");
+
+  if (chart) chart.destroy();
+
+  chart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: labels,
+      datasets: [{
+        label: "Grade Points",
+        data: values
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 10
+        }
+      }
+    }
+  });
+});
 </script>
 
 </body>
