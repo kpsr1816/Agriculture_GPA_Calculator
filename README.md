@@ -1,2 +1,3 @@
-https://doi.org/10.5281/zenodo.20010340
-This project is protected under copyright. Unauthorized use is prohibited.
+Agriculture GPA & OGPA Intelligence System
+
+This project presents a lightweight, web-based academic performance analysis tool designed for agricultural students to efficiently calculate and interpret Semester GPA and Overall GPA (OGPA). The system integrates course-wise input of marks and credits with automated GPA computation, visualization, performance insights, and target GPA prediction, enabling informed academic planning and decision-making. Built using HTML, CSS, and JavaScript, the tool is accessible through standard web browsers without requiring additional software. It serves as a practical decision-support system for monitoring academic progress and reducing manual calculation errors in agricultural education. DOI: https://doi.org/10.5281/zenodo.20010340
