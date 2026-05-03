@@ -1,249 +1,276 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Agriculture GPA Calculator</title>
-  <style>
-    body {
-      font-family: 'Roboto', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #eef2f3;
-      color: #333;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    header {
-      background-color: #28a745;
-      color: white;
-      padding: 1rem;
-      text-align: center;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 2rem;
-    }
-    .intro {
-      text-align: center;
-      margin: 20px;
-      font-size: 1.1rem;
-      color: #555;
-      font-style: italic;
-    }
-    .container {
-      max-width: 600px;
-      margin: auto;
-      padding: 20px;
-      background: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-    .form-group {
-      margin-bottom: 20px;
-    }
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    button {
-      background-color: #28a745;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-right: 10px;
-      font-weight: bold;
-    }
-    button:hover {
-      background-color: #218838;
-    }
-    .remove-button {
-      background-color: #dc3545;
-      margin-top: 10px;
-      font-weight: bold;
-    }
-    .remove-button:hover {
-      background-color: #c82333;
-    }
-    .result {
-      margin-top: 20px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      text-align: center;
-      color: #28a745;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    table, th, td {
-      border: 1px solid #ccc;
-    }
-    th, td {
-      padding: 10px;
-      text-align: center;
-    }
-    th {
-      background-color: #f8f9fa;
-      font-weight: bold;
-    }
-    footer {
-      background-color: #f1f1f1;
-      padding: 15px;
-      text-align: center;
-      font-size: 0.9rem;
-      color: #777;
-      margin-top: auto;
-      border-top: 1px solid #ccc;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semester GPA Calculator</title>
+
+<style>
+
+/* ===== BACKGROUND ===== */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  background: linear-gradient(-45deg, #e8f5e9, #f1f8e9, #e3f2fd, #f9fbe7);
+  background-size: 300% 300%;
+  animation: gradientBG 20s ease infinite;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+@keyframes gradientBG {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+
+/* ===== HEADER ===== */
+header {
+  text-align: center;
+  padding: 20px;
+  color: #2e7d32;
+}
+
+header h1 {
+  margin: 0;
+}
+
+/* ===== INTRO ===== */
+.intro {
+  text-align: center;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+/* ===== CARD ===== */
+.container {
+  max-width: 600px;
+  margin: auto;
+  padding: 30px;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  animation: fadeIn 0.8s ease;
+}
+
+@keyframes fadeIn {
+  from {opacity:0; transform: translateY(20px);}
+  to {opacity:1; transform: translateY(0);}
+}
+
+/* ===== FORM ===== */
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  transition: 0.3s;
+}
+
+input:focus {
+  border-color: #2e7d32;
+  outline: none;
+  box-shadow: 0 0 5px rgba(46,125,50,0.2);
+}
+
+/* ===== BUTTONS ===== */
+button {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.primary-btn {
+  background: #2e7d32;
+  color: white;
+}
+
+.primary-btn:hover {
+  background: #1b5e20;
+}
+
+.secondary-btn {
+  background: #e0e0e0;
+}
+
+.remove-button {
+  background: #dc3545;
+  color: white;
+  margin-top: 10px;
+}
+
+.remove-button:hover {
+  background: #c82333;
+}
+
+/* ===== RESULT ===== */
+.result {
+  margin-top: 20px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  text-align: center;
+  color: #2e7d32;
+}
+
+/* ===== TABLE ===== */
+table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+th {
+  background: #2e7d32;
+  color: white;
+}
+
+th, td {
+  padding: 10px;
+  text-align: center;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  text-align: center;
+  padding: 15px;
+  font-size: 0.85rem;
+  color: #777;
+  margin-top: auto;
+}
+
+</style>
 </head>
+
 <body>
-  <header>
-    <h1>Agriculture GPA Calculator</h1>
-  </header>
-  <div class="intro">
-    A smarter way to calculate your GPA for agricultural studies! Simplify your workload and focus on achieving academic success.
-  </div>
-  <div class="container">
-    <form id="gpa-form">
-      <div id="courses">
-        <div class="form-group" id="course1">
-          <label for="marks1">Course 1 Marks (%)</label>
-          <input type="number" id="marks1" name="marks1" placeholder="Enter marks (1.00-100.00)" required min="1" max="100" step="0.01">
-          <label for="credit1">Course 1 Credit Hours</label>
-          <input type="number" id="credit1" name="credit1" placeholder="Enter credit hours (positive value)" required min="1" step="1">
-        </div>
-      </div>
-      <button type="button" onclick="addCourse()">Add Another Course</button>
-      <button type="submit">Calculate GPA</button>
-    </form>
-    <div class="result" id="result"></div>
-    <div id="credit-requirements" style="display: none;">
-      <h2>Minimum Credit Requirements</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Requirements</th>
-            <th>UG</th>
-            <th>PG</th>
-            <th>Ph.D</th>
-            <th>Diploma</th>
-            <th>ODL</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>For a pass in a subject</td>
-            <td>6.00</td>
-            <td>7.00</td>
-            <td>7.00</td>
-            <td>6.00</td>
-            <td>5.00</td>
-          </tr>
-          <tr>
-            <td>For a successful completion</td>
-            <td>6.50</td>
-            <td>7.00</td>
-            <td>7.50</td>
-            <td>6.50</td>
-            <td>5.00</td>
-          </tr>
-        </tbody>
-      </table>
-      <p style="font-size: 0.9rem; text-align: center;">*Based on Tamil Nadu Agricultural University grading system*</p>
+
+<header>
+  <h1>Semester GPA Calculator</h1>
+</header>
+
+<div class="intro">
+  Enter marks and credits to calculate your GPA
+</div>
+
+<div class="container">
+
+<form id="gpa-form">
+  <div id="courses">
+    <div class="form-group" id="course1">
+      <label>Course 1 Marks (%)</label>
+      <input type="number" id="marks1" required>
+
+      <label>Course 1 Credit Hours</label>
+      <input type="number" id="credit1" required>
     </div>
   </div>
-  <footer>
-     Creators <br>
-    Mr. R. Sabarivasan (M.Sc. Agronomy) and Mr. B.S. Anand Babu (M.Sc. Entomology)
-  </footer>
 
-  <script>
-    let courseCount = 1;
+  <button type="button" class="secondary-btn" onclick="addCourse()">+ Add Course</button>
+  <button type="submit" class="primary-btn">Calculate GPA</button>
+</form>
 
-    // Function to add another course input
-    function addCourse() {
-      courseCount++;
-      const coursesDiv = document.getElementById("courses");
-      const courseHTML = `
-        <div class="form-group" id="course${courseCount}">
-          <label for="marks${courseCount}">Course ${courseCount} Marks (%)</label>
-          <input type="number" id="marks${courseCount}" name="marks${courseCount}" placeholder="Enter marks (1.00-100.00)" required min="1" max="100" step="0.01">
-          <label for="credit${courseCount}">Course ${courseCount} Credit Hours</label>
-          <input type="number" id="credit${courseCount}" name="credit${courseCount}" placeholder="Enter credit hours (positive value)" required min="1" step="1">
-          <button type="button" class="remove-button" onclick="removeCourse(${courseCount})">Remove Course</button>
-        </div>
-      `;
-      coursesDiv.insertAdjacentHTML("beforeend", courseHTML);
+<div class="result" id="result"></div>
+
+<div id="credit-requirements" style="display:none;">
+  <h3>Minimum Credit Requirements</h3>
+  <table>
+    <tr>
+      <th>Requirement</th>
+      <th>UG</th>
+      <th>PG</th>
+      <th>Ph.D</th>
+      <th>Diploma</th>
+      <th>ODL</th>
+    </tr>
+    <tr>
+      <td>Pass</td>
+      <td>6.00</td>
+      <td>7.00</td>
+      <td>7.00</td>
+      <td>6.00</td>
+      <td>5.00</td>
+    </tr>
+    <tr>
+      <td>Completion</td>
+      <td>6.50</td>
+      <td>7.00</td>
+      <td>7.50</td>
+      <td>6.50</td>
+      <td>5.00</td>
+    </tr>
+  </table>
+</div>
+
+</div>
+
+<footer>
+  Developed by Sabari
+</footer>
+
+<script>
+
+let courseCount = 1;
+
+function addCourse() {
+  courseCount++;
+  const div = document.getElementById("courses");
+
+  div.insertAdjacentHTML("beforeend", `
+    <div class="form-group" id="course${courseCount}">
+      <label>Course ${courseCount} Marks (%)</label>
+      <input type="number" id="marks${courseCount}" required>
+
+      <label>Course ${courseCount} Credit Hours</label>
+      <input type="number" id="credit${courseCount}" required>
+
+      <button type="button" class="remove-button" onclick="removeCourse(${courseCount})">Remove</button>
+    </div>
+  `);
+}
+
+function removeCourse(id) {
+  document.getElementById("course" + id)?.remove();
+}
+
+document.getElementById("gpa-form").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  let totalCredits = 0;
+  let totalPoints = 0;
+
+  for (let i = 1; i <= courseCount; i++) {
+    const c = document.getElementById("course" + i);
+    if (c) {
+      const marks = parseFloat(document.getElementById("marks" + i).value);
+      const credit = parseFloat(document.getElementById("credit" + i).value);
+
+      totalCredits += credit;
+      totalPoints += (marks/10) * credit;
     }
+  }
 
-    // Function to remove a course input
-    function removeCourse(courseId) {
-      const courseDiv = document.getElementById(`course${courseId}`);
-      if (courseDiv) {
-        courseDiv.remove();
-      }
-    }
+  const gpa = totalPoints / totalCredits;
+  document.getElementById("result").innerText = "GPA: " + gpa.toFixed(2);
+  document.getElementById("credit-requirements").style.display = "block";
+});
 
-    // GPA Calculation logic
-    document.getElementById("gpa-form").addEventListener("submit", function (e) {
-      e.preventDefault();
-      let totalCreditPoints = 0;
-      let totalCredits = 0;
+</script>
 
-      for (let i = 1; i <= courseCount; i++) {
-        const courseDiv = document.getElementById(`course${i}`);
-        if (courseDiv) {
-          const marks = parseFloat(document.getElementById(`marks${i}`).value);
-          const credit = parseFloat(document.getElementById(`credit${i}`).value);
-
-          if (isNaN(marks) || isNaN(credit)) {
-            alert(`Please fill out both marks and credit hours for Course ${i}.`);
-            return;
-          }
-
-          if (marks < 1 || marks > 100) {
-            alert(`Invalid marks entered for Course ${i}. Please enter marks between 1.00 and 100.00.`);
-            return;
-          }
-          if (credit <= 0) {
-            alert(`Invalid credit hours entered for Course ${i}. Please enter a positive number.`);
-            return;
-          }
-
-          const gradePoint = marks / 10;
-          const creditPoint = gradePoint * credit;
-
-          totalCreditPoints += creditPoint;
-          totalCredits += credit;
-        }
-      }
-
-      if (totalCredits === 0) {
-        alert("Total credits cannot be zero. Please enter valid credit hours.");
-        return;
-      }
-
-      const gpa = totalCreditPoints / totalCredits;
-      document.getElementById("result").textContent = `Your GPA is: ${gpa.toFixed(2)}`;
-      
-      // Show the credit requirements table
-      const creditTable = document.getElementById("credit-requirements");
-      console.log("Credit Requirements Table should now display");
-      creditTable.style.display = "block";
-    });
-  </script>
 </body>
 </html>
